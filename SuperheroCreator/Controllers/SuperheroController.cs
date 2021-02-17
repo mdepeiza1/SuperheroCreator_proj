@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SuperheroCreator.Data;
+using SuperheroCreator.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,7 +21,8 @@ namespace SuperheroCreator.Controllers
         // GET: SuperheroController
         public ActionResult Index()
         {
-            return View();
+            var superheroes = _context.Superheroes;
+            return View(superheroes);
         }
 
         // GET: SuperheroController/Details/5
@@ -38,10 +40,12 @@ namespace SuperheroCreator.Controllers
         // POST: SuperheroController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public ActionResult Create(Superhero superhero)
         {
             try
             {
+                _context.Superheroes.Add(superhero);
+                _context.SaveChanges();
                 return RedirectToAction(nameof(Index));
             }
             catch
