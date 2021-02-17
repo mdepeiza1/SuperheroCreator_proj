@@ -58,16 +58,23 @@ namespace SuperheroCreator.Controllers
         // GET: SuperheroController/Edit/5
         public ActionResult Edit(int id)
         {
-            return View();
+            var sh = _context.Superheroes.Where(s => s.Id == id).FirstOrDefault();
+
+            return View(sh);
         }
 
         // POST: SuperheroController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult Edit(Superhero sh)
+            //public ActionResult Edit(int id, IFormCollection collection) old version
         {
             try
             {
+                var superhero = _context.Superheroes.Where(s => s.Id == sh.Id).FirstOrDefault();
+                _context.Superheroes.Remove(superhero);
+                _context.Superheroes.Add(sh);
+                _context.SaveChanges();
                 return RedirectToAction(nameof(Index));
             }
             catch
